@@ -87,51 +87,77 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    fringe = util.Stack()
-    exploredNodes = []
-    startState = problem.getStartState()
-    startNode = (startState, [])
+    # fringe = util.Stack()
+    # # previously expanded states
+    # exploredNodes = []
+    # startState = problem.getStartState()
+    # startNode = (startState, []) # (state, actions)
 
-    fringe.push(startNode)
+    # fringe.push(startNode)
 
-    while not fringe.isEmpty():
-        currentState, actions = fringe.pop()
+    # while not fringe.isEmpty():
+    #     # exploring last node on fringe
+    #     currentState, actions = fringe.pop()
 
-        if currentState not in exploredNodes:
-            exploredNodes.append(currentState)
+    #     if currentState not in exploredNodes:
+    #         # add popped node to explorednodes
+    #         exploredNodes.append(currentState)
             
-            if problem.isGoalState(currentState):
-                return actions
-            else:
-                successors = problem.getSuccessors(currentState)
+    #         if problem.isGoalState(currentState):
+    #             return actions
+    #         else:
+    #             # list of (successor, action, cost)
+    #             successors = problem.getSuccessors(currentState)
 
-                for succState, succAction, succCost in successors:
-                    newAction = actions + [succAction]
-                    newNode = (succState, newAction)
-                    fringe.push(newNode)
-    return actions
+    #             for succState, succAction, succCost in successors:
+    #                 newAction = actions + [succAction]
+    #                 newNode = (succState, newAction)
+    #                 fringe.push(newNode)
+    # return actions
+    # stores states that need to be expanded for dfs
+    fringe = util.Stack() 
+    # stores path of expanded states for dfs
+    currentPath = util.Stack()
+
+    exploredNodes = []
+    finalPath = [] #store final path of states
+
+    fringe.push(problem.getStartState())
+    currentState = fringe.pop() #current state
+
+    while not problem.isGoalState(currentState): #search until goal state
+        if currentState not in exploredNodes: # new state found
+            exploredNodes.append(currentState) # add state to explorednodes
+            for successor in problem.getSuccessors(currentState): # adding successors of the current state
+                fringe.push(successor[0]) # add to fringe
+                currentPath.push(finalPath + [successor[1]]) # store path
+        currentState = fringe.pop() #update the current path
+        finalPath = currentPath.pop() # add to the final path
+    return finalPath
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    fringe = util.Queue()
+    # stores states that need to be expanded for bfs
+    fringe = util.Queue() 
+    # stores path of expanded states for bfs
     currentPath = util.Queue()
 
     exploredNodes = []
-    finalPath = []
+    finalPath = [] #store final path of states
 
     fringe.push(problem.getStartState())
-    currentState = fringe.pop()
+    currentState = fringe.pop() #current state
 
-    while not problem.isGoalState(currentState):
-        if currentState not in exploredNodes:
-            exploredNodes.append(currentState)
-            for successor in problem.getSuccessors(currentState):
-                fringe.push(successor[0])
-                currentPath.push(finalPath + [successor[1]])
-        currentState = fringe.pop()
-        finalPath = currentPath.pop()
+    while not problem.isGoalState(currentState): #search until goal state
+        if currentState not in exploredNodes: # new state found
+            exploredNodes.append(currentState) # add state to explorednodes
+            for successor in problem.getSuccessors(currentState): # adding successors of the current state
+                fringe.push(successor[0]) # add to fringe
+                currentPath.push(finalPath + [successor[1]]) # store path
+        currentState = fringe.pop() #update the current path
+        finalPath = currentPath.pop() # add to the final path
     return finalPath
     util.raiseNotDefined()
 

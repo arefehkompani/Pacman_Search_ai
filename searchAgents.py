@@ -379,13 +379,14 @@ def cornersHeuristic(state, problem):
     currentPosition = state[0] 
     exploredCorners = state[1] 
 
+    # Using Maze Distance to farthest corner as the heuristic.
     maxHeuristic = 0
-    for corner in corners:
+    for corner in corners: # Calculates maximum heuristic for unvisited corners using maze distance as heuristic
         if corner not in exploredCorners:
             heuristic = mazeDistance(currentPosition, corner, problem.startingGameState)
             if heuristic > maxHeuristic:
                 maxHeuristic = heuristic
-    return maxHeuristic # Default to trivial solution
+    return maxHeuristic 
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -479,6 +480,7 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
+    #  Using Maze Distance to farthest food as a heuristic
     maxHeuristic = 0
     for p in foodGrid.asList():
         heuristic = mazeDistance(position, p, problem.startingGameState)
@@ -571,4 +573,5 @@ def mazeDistance(point1, point2, gameState):
     assert not walls[x1][y1], 'point1 is a wall: ' + str(point1)
     assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
     prob = PositionSearchProblem(gameState, start=point1, goal=point2, warn=False, visualize=False)
+    # print(len(search.bfs(prob)))
     return len(search.bfs(prob))
