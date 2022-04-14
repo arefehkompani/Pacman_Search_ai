@@ -112,33 +112,6 @@ def depthFirstSearch(problem):
     return actions
     util.raiseNotDefined()
 
-def genericSearch(problem, i):
-    """Search deepest node first (dfs) if i is 1 else it searches the shallowest node first (bfs)."""
-
-    if i is 1:
-        open = util.Stack()  # Stores states that need to be expanded for dfs.
-        currentPath = util.Stack()  # Stores path of expanded states for dfs.
-    else:
-        open = util.Queue()  # Stores states that need to be expanded for bfs.
-        currentPath = util.Queue()  # Stores path of expanded states for bfs.
-
-    closed = []  # Stores states that have been expanded.
-    finalPath = []  # Store final path of states.
-
-    open.push(problem.getStartState())
-    currState = open.pop()  # Current State.
-    while not problem.isGoalState(currState):   # Search until goal state.
-
-        if currState not in closed:  # New state found.
-            closed.append(currState)  # Add state to closed.
-            for successor in problem.getSuccessors(currState):  # Adding successors of current state.
-                open.push(successor[0])  # Add to open.
-                currentPath.push(finalPath + [successor[1]])  # Store path.
-
-        currState = open.pop()  # Update current State.
-        finalPath = currentPath.pop()  # Add to final path.
-    return finalPath
-
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
@@ -198,6 +171,29 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    fringe = util.PriorityQueue()
+    currentPath = util.PriorityQueue()
+
+    exploredNodes = []
+    finalPath = []
+
+    fringe.push(problem.getStartState(), 0)
+    currentState = fringe.pop()
+
+    while not problem.isGoalState(currentState):
+        if currentState not in exploredNodes:
+            exploredNodes.append(currentState)
+
+            for successor in problem.getSuccessors(currentState):
+                succCost = problem.getCostOfActions(finalPath + [successor[1]])
+                succCost += heuristic(successor[0], problem)
+
+                if successor[0] not in exploredNodes:
+                    fringe.push(successor[0], succCost)
+                    currentPath.push(finalPath + [successor[1]], succCost)
+        currentState = fringe.pop()
+        finalPath = currentPath.pop()
+    return finalPath
     util.raiseNotDefined()
 
 
