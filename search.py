@@ -87,34 +87,7 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    # fringe = util.Stack()
-    # # previously expanded states
-    # exploredNodes = []
-    # startState = problem.getStartState()
-    # startNode = (startState, []) # (state, actions)
-
-    # fringe.push(startNode)
-
-    # while not fringe.isEmpty():
-    #     # exploring last node on fringe
-    #     currentState, actions = fringe.pop()
-
-    #     if currentState not in exploredNodes:
-    #         # add popped node to explorednodes
-    #         exploredNodes.append(currentState)
-            
-    #         if problem.isGoalState(currentState):
-    #             return actions
-    #         else:
-    #             # list of (successor, action, cost)
-    #             successors = problem.getSuccessors(currentState)
-
-    #             for succState, succAction, succCost in successors:
-    #                 newAction = actions + [succAction]
-    #                 newNode = (succState, newAction)
-    #                 fringe.push(newNode)
-    # return actions
-    # stores states that need to be expanded for dfs
+    
     fringe = util.Stack() 
     # stores path of expanded states for dfs
     currentPath = util.Stack()
@@ -176,10 +149,9 @@ def uniformCostSearch(problem):
     while not problem.isGoalState(currentState):
         if currentState not in exploredNodes:
             exploredNodes.append(currentState)
-
-            for successor in problem.getSuccessors(currentState):
-                succCost = problem.getCostOfActions(finalPath + [successor[1]])
-                if successor[0] not in exploredNodes:
+            for successor in problem.getSuccessors(currentState): # To calculate costs of successors of current state
+                succCost = problem.getCostOfActions(finalPath + [successor[1]]) # Cost of selecting successor
+                if successor[0] not in exploredNodes: # We have a new state for adding to the Queue and storing the path
                     fringe.push(successor[0], succCost)
                     currentPath.push(finalPath + [successor[1]], succCost)
         currentState = fringe.pop()
@@ -213,7 +185,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             for successor in problem.getSuccessors(currentState):
                 succCost = problem.getCostOfActions(finalPath + [successor[1]])
                 succCost += heuristic(successor[0], problem)
-
+                print(heuristic(successor[0], problem))
                 if successor[0] not in exploredNodes:
                     fringe.push(successor[0], succCost)
                     currentPath.push(finalPath + [successor[1]], succCost)
